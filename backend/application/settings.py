@@ -202,3 +202,127 @@ API_MODEL_MAP = {}
 
 # 初始化需要执行的列表，用来初始化后执行
 INITIALIZE_RESET_LIST = []
+
+#cors配置
+ALLOWED_HOSTS = (
+    '*',
+)
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CSRF_TRUSTED_ORIGINS = (
+    'https://test.cn',
+)
+CORS_REPLACE_HTTPS_REFERER = True
+#CSRF_COOKIE_DOMAIN = '*.66daili.cn'
+CORS_ORIGIN_WHITELIST = (
+    '*.test.cn',
+)
+
+#日志配置
+
+# 管理员邮箱
+ADMINS = (
+    ('LunacyZeus', 'qw3036@qq.com'),
+)
+
+# 非空链接，却发生404错误，发送通知MANAGERS
+SEND_BROKEN_LINK_EMAILS = True
+MANAGERS = ADMINS
+
+# Email设置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'  # 邮箱SMTP服务器(邮箱需要开通SMTP服务)
+EMAIL_PORT = 465  # 邮箱SMTP服务端口
+EMAIL_HOST_USER = 'qw3036@qq.com'  # 我的邮箱帐号
+EMAIL_HOST_PASSWORD = 'irpuzvwgmmqcbbch'  # 授权码
+EMAIL_SUBJECT_PREFIX = '[ec-monitor]'  # 为邮件标题的前缀,默认是'[django]'
+# EMAIL_USE_TLS = True #开启安全链接
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER  # 设置发件人
+
+log_path = os.path.join(BASE_DIR, "logs")
+if not os.path.exists(log_path):
+    os.makedirs("logs")
+
+# logging日志配置
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {  # 日志格式
+        'standard': {
+            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'}
+    },
+    'filters': {  # 过滤器
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
+    'handlers': {  # 处理器
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'mail_admins': {  # 发送邮件通知管理员
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            # 'filters': ['require_debug_false',],  # 仅当 DEBUG = False 时才发送邮件
+            'include_html': True,
+        },
+        'debug': {  # 记录到日志文件(需要创建对应的目录，否则会出错)
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, "logs", 'debug.log'),  # 日志输出文件
+            'maxBytes': 1024 * 1024 * 5,  # 文件大小
+            'backupCount': 5,  # 备份份数
+            'formatter': 'standard',  # 使用哪种formatters日志格式
+        },
+        'ec': {  # 记录到日志文件(需要创建对应的目录，否则会出错)
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, "logs", 'ec.log'),  # 日志输出文件
+            'maxBytes': 1024 * 1024 * 5,  # 文件大小
+            'backupCount': 5,  # 备份份数
+            'formatter': 'standard',  # 使用哪种formatters日志格式
+        },
+        'console': {  # 输出到控制台
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {  # logging管理器
+        'django': {
+            'handlers': ['console', ],
+            'level': 'ERROR',
+            'propagate': False
+        },
+        'ec': {
+            'handlers': ['ec', ],
+            'level': 'DEBUG',
+            # 此记录器处理过的消息就不再让 django 记录器再次处理了
+            'propagate': False
+        },
+        'django.request': {
+            'handlers': ['console', 'debug', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.template': {
+            'handlers': ['debug', ],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.utils.autoreload': {
+            'handlers': ['null', ],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        # 对于不在 ALLOWED_HOSTS 中的请求不发送报错邮件
+        'django.security.DisallowedHost': {
+            'handlers': ['null', ],
+            'propagate': False,
+        },
+    }
+
+}
+

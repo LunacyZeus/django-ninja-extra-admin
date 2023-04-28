@@ -10,9 +10,9 @@ DATABASE_PORT = 3306
 # 数据库用户名
 DATABASE_USER = "root"
 # 数据库密码
-DATABASE_PASSWORD = ""
+DATABASE_PASSWORD = "123456"
 # 数据库名
-DATABASE_NAME = "fuadmin"
+DATABASE_NAME = "failure_admin"
 
 # ================================================= #
 # ************** redis配置，无redis 可不进行配置  ************** #

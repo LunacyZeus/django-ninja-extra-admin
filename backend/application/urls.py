@@ -17,13 +17,12 @@ from django.views.decorators.csrf import csrf_exempt
 from application.admin import admin_site
 from django.urls import path, include
 
-from apps.api import api
+from api import api
 from apps.token.views import index_view
 
 
 urlpatterns = [
     path('', index_view),
     path("api/", api.urls),
-    #path('nibiru/', include('apps.nibiru.urls')),
     path('d_admin/', admin_site.urls),
 ]
